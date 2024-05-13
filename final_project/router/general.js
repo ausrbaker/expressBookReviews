@@ -25,27 +25,56 @@ public_users.post("/register", (req,res) => {
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
   //Write your code here
+  const getBooks = new Promise((resolve, reject) => {
     try {
-    // Stringify the books object and send it as JSON response
-    const booksJSON = JSON.stringify(books);
-    return res.status(200).json(booksJSON);
-  } catch (error) {
-    console.error("Error parsing file:", error);
-    return res.status(500).json({ error: "Internal Error" });
-  }
-//  return res.status(300).json({message: "Yet to be implemented"});
+      // Simulate asynchronous reading of books data
+      // Replace this with actual asynchronous operation to read books data
+      setTimeout(() => {
+        resolve(books);
+      }, 2000); // Simulating a delay of 1 second
+    } catch (error) {
+      reject(error);
+    }
+  });
+  getBooks
+    .then((booksData) => {
+      // Stringify the books object and send it as JSON response
+      const booksJSON = JSON.stringify(booksData);
+      res.status(200).json(booksJSON);
+    })
+    .catch((error) => {
+      console.error("Error parsing file:", error);
+      res.status(500).json({ error: "Internal Error" });
+    });
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn', function (req, res) {
   //Write your code here
   const isbn = parseInt(req.params.isbn); // Convert ISBN to integer
-  if (books.hasOwnProperty(isbn)) {
-    const book = books[isbn];
-    return res.status(200).json({ book });
-  } else {
-    return res.status(404).json({ message: "Book not found" });
-  }
+  const getBooks = new Promise((resolve, reject) => {
+    try {
+      // Simulate asynchronous reading of books data
+      // Replace this with actual asynchronous operation to read books data
+      setTimeout(() => {
+        resolve(books);
+      }, 2000); // Simulating a delay of 1 second
+    } catch (error) {
+      reject(error);
+    }
+  });
+  getBooks.then((booksData) => {
+    if (booksData.hasOwnProperty(isbn)) {
+      const book = booksData[isbn];
+      return res.status(200).json({ book });
+    } else {
+      return res.status(404).json({ message: "Book not found" });
+    }
+  })
+  .catch((error) => {
+    console.error("Error parsing file:", error);
+    res.status(500).json({ error: "Internal Error" });
+  });
 //    return res.status(300).json({message: "Yet to be implemented"});
 });
   
@@ -54,20 +83,36 @@ public_users.get('/author/:author',function (req, res) {
   //Write your code here
   const providedAuthor = req.params.author; // Get the provided author from request parameters
   const matchingBooks = []; // Array to store matching books
-
-  // Iterate through each key in the books object
-  for (const key in books) {
-    const book = books[key]; 
-    if (book.author === providedAuthor) {
-      matchingBooks.push(book); 
+  const getBooks = new Promise((resolve, reject) => {
+    try {
+      // Simulate asynchronous reading of books data
+      // Replace this with actual asynchronous operation to read books data
+      setTimeout(() => {
+        resolve(books);
+      }, 2000); // Simulating a delay of 1 second
+    } catch (error) {
+      reject(error);
     }
-  }
-  if (matchingBooks.length > 0) {
-    return res.status(200).json({ books: matchingBooks });
-  } else {
-    return res.status(404).json({ message: "No books found for the provided author" });
-  }
-//  return res.status(300).json({message: "Yet to be implemented"});
+  });  
+  getBooks.then((booksData) => {
+  // Iterate through each key in the books object
+    for (const key in booksData) {
+      const book = booksData[key]; 
+      if (book.author === providedAuthor) {
+        matchingBooks.push(book); 
+      }
+    }
+    if (matchingBooks.length > 0) {
+      return res.status(200).json({ books: matchingBooks });
+    } else {
+      return res.status(404).json({ message: "No books found for the provided author" });
+    }
+  })
+  .catch((error) => {
+    console.error("Error parsing file:", error);
+    res.status(500).json({ error: "Internal Error" });
+  });
+
 });
 
 // Get all books based on title
@@ -75,20 +120,34 @@ public_users.get('/title/:title',function (req, res) {
   //Write your code here
   const providedTitle = req.params.title; // Get the provided author from request parameters
   const matchingBooks = []; // Array to store matching books
-
-  // Iterate through each key in the books object
-  for (const key in books) {
-    const book = books[key]; 
-    if (book.title === providedTitle) {
-      matchingBooks.push(book); 
+  const getBooks = new Promise((resolve, reject) => {
+    try {
+      // Simulate asynchronous reading of books data
+      // Replace this with actual asynchronous operation to read books data
+      setTimeout(() => {
+        resolve(books);
+      }, 2000); // Simulating a delay of 1 second
+    } catch (error) {
+      reject(error);
     }
-  }
-  if (matchingBooks.length > 0) {
-    return res.status(200).json({ books: matchingBooks });
-  } else {
-    return res.status(404).json({ message: "No books found for the provided author" });
-  }
-//  return res.status(300).json({message: "Yet to be implemented"});
+  });
+  getBooks.then((booksData) => {
+    for (const key in booksData) {
+      const book = booksData[key]; 
+      if (book.title === providedTitle) {
+        matchingBooks.push(book); 
+      }
+    }
+    if (matchingBooks.length > 0) {
+      return res.status(200).json({ books: matchingBooks });
+    } else {
+      return res.status(404).json({ message: "No books found for the provided author" });
+    }
+  }.catch(() => {
+    console.error("Error parsing file:", error);
+    res.status(500).json({ error: "Internal Error" });
+  });
+
 });
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
